@@ -87,16 +87,29 @@ if __name__ == "__main__":
     sistema.input['dragonfly'] = 0
     sistema.input['doji'] = 0
     sistema.input['pinca'] = 0
-    sistema.input['martelo'] = 1
+    sistema.input['martelo'] = 2
     sistema.input['media_movel'] = 7
     sistema.input['posicao'] = 2
 
     try:
-        sistema.compute()
-        print(sistema.output['previsao'])
-        previsao.view(sim=sistema)
-        plt.show()
+        sistema.compute()        
     except ValueError:
-        print('O sistema é esparso demais. Não nenhuma regra que possa relacionar os inputs dados')
+        print('O sistema é esparso demais. Não há nenhuma regra que possa relacionar os inputs dados')
         sys.exit()
+
+    result = sistema.output['previsao']
+
+    res = {}
+    res['venda'] = fuzz.interp_membership(previsao.universe, previsao['venda'].mf, result)
+    res['manter'] = fuzz.interp_membership(previsao.universe, previsao['manter'].mf, result)
+    res['compra'] = fuzz.interp_membership(previsao.universe, previsao['compra'].mf, result)
+
+    print("Valor da previsão: \t" + str(result))
+    print("Pertinencia Venda: \t" + str(res['venda']))
+    print("Pertinencia Manter: \t" + str(res['manter']))
+    print("Pertinencia Compra: \t" + str(res['compra']))    
+    print("Indicação: \t\t" + max(res, key=res.get))
+
+    # previsao.view(sim=sistema)
+    # plt.show()
     
