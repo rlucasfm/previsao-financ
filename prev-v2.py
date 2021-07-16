@@ -95,6 +95,7 @@ if __name__ == "__main__":
         sistema.compute()        
     except ValueError:
         print('O sistema é esparso demais. Não há nenhuma regra que possa relacionar os inputs dados')
+        print("Indicação: \t\t manter")
         sys.exit()
 
     result = sistema.output['previsao']
