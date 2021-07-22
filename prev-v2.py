@@ -77,40 +77,52 @@ if __name__ == "__main__":
     regra8 = ctrl.Rule(martelo['comum']                     & mediamovel['Baixa']   & posicao['Topo']   , previsao['venda'])
     regra9 = ctrl.Rule(pinca['sim']                         & posicao['Fundo']                          , previsao['venda'])
     regra10= ctrl.Rule(pinca['sim']                         & posicao['Topo']                           , previsao['compra'])
-    
+    regra11= ctrl.Rule(                                     posicao['Topo']                             , previsao['venda'])
+    regra12= ctrl.Rule(                                     posicao['Fundo']                            , previsao['compra'])
+    regra13= ctrl.Rule(                                     mediamovel['Alta']                          , previsao['compra'])
+    regra14= ctrl.Rule(                                     mediamovel['Baixa']                         , previsao['venda'])
+    regra15= ctrl.Rule(                                     ~posicao['Topo']        & ~posicao['Fundo'] , previsao['manter'])
+    regra15= ctrl.Rule(                                     ~mediamovel['Alta']     & ~mediamovel['Baixa']  , previsao['manter'])
+    regra16= ctrl.Rule(                                     mediamovel['Alta']      & posicao['Topo']   , previsao['manter'])
+    regra17= ctrl.Rule(                                     mediamovel['Baixa']      & posicao['Fundo'] , previsao['manter'])
 
-    sistema_controle = ctrl.ControlSystem([regra1, regra2, regra3, regra4, regra5, regra6, regra7, regra8, regra9, regra10])
+
+    sistema_controle = ctrl.ControlSystem([regra1, regra2, regra3, regra4, regra5, regra6, regra7, regra8, regra9, regra10, regra11, regra12, regra13, regra14, regra15, regra16, regra17])
     sistema = ctrl.ControlSystemSimulation(sistema_controle)
 
-    # Inputs aceita um array numpy ou um valor inteiro
+    # 0 - Não há, 1 - Engolfo de baixa, 2 - Engolfo de Alta
     sistema.input['engolfo'] = 0
+    # 0 - Não há, 1 - Dragonfly comum, 2 - Dragonfly Gravestone
     sistema.input['dragonfly'] = 0
+    # 0 - Não há, 1 - Há
     sistema.input['doji'] = 0
+    # 0 - Não há, 1 - Há
     sistema.input['pinca'] = 0
-    sistema.input['martelo'] = 2
+    # 0 - Não há, 1 - Martelo comum, 2 - Martelo invertido
+    sistema.input['martelo'] = 0
+    # Qualquer valor entre 0 a 10, sendo 0 uma média totalmente para baixo, e 10 totalmente para cima
     sistema.input['media_movel'] = 7
+    # Qualquer valor entre 0 e 10, sendo 0 um fundo absoluto e 10 um topo absoluto
     sistema.input['posicao'] = 2
 
     try:
-        sistema.compute()        
+        sistema.compute()
+        result = sistema.output['previsao']
+        res = {}
+        res['venda'] = fuzz.interp_membership(previsao.universe, previsao['venda'].mf, result)
+        res['manter'] = fuzz.interp_membership(previsao.universe, previsao['manter'].mf, result)
+        res['compra'] = fuzz.interp_membership(previsao.universe, previsao['compra'].mf, result)
+
+        print("Valor da previsão: \t" + str(result))
+        print("Pertinencia Venda: \t" + str(res['venda']))
+        print("Pertinencia Manter: \t" + str(res['manter']))
+        print("Pertinencia Compra: \t" + str(res['compra']))    
+        print("Indicação: \t\t" + max(res, key=res.get))
+
+        previsao.view(sim=sistema)
+        plt.show()
     except ValueError:
-        print('O sistema é esparso demais. Não há nenhuma regra que possa relacionar os inputs dados')
-        print("Indicação: \t\t manter")
+        print('O sistema é esparso demais. Não nenhuma regra que possa relacionar os inputs dados')
+        print('Indicação: \t\t manter')
         sys.exit()
-
-    result = sistema.output['previsao']
-
-    res = {}
-    res['venda'] = fuzz.interp_membership(previsao.universe, previsao['venda'].mf, result)
-    res['manter'] = fuzz.interp_membership(previsao.universe, previsao['manter'].mf, result)
-    res['compra'] = fuzz.interp_membership(previsao.universe, previsao['compra'].mf, result)
-
-    print("Valor da previsão: \t" + str(result))
-    print("Pertinencia Venda: \t" + str(res['venda']))
-    print("Pertinencia Manter: \t" + str(res['manter']))
-    print("Pertinencia Compra: \t" + str(res['compra']))    
-    print("Indicação: \t\t" + max(res, key=res.get))
-
-    # previsao.view(sim=sistema)
-    # plt.show()
     
