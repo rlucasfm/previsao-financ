@@ -51,9 +51,9 @@ if __name__ == "__main__":
     posicao['Fundo'] = fuzz.trimf(posicao.universe, [-0.01, 0, 5])
     posicao['Topo'] = fuzz.trimf(posicao.universe, [5, 10, 11])    
 
-    previsao['venda'] = fuzz.sigmf(previsao.universe, 20, -0.2)
-    previsao['manter'] = fuzz.gaussmf(previsao.universe, 50, 15)
-    previsao['compra'] = fuzz.sigmf(previsao.universe, 80, 0.2)    
+    previsao['venda'] = fuzz.sigmf(previsao.universe, 40, -0.2)
+    previsao['manter'] = fuzz.gaussmf(previsao.universe, 50, 10)
+    previsao['compra'] = fuzz.sigmf(previsao.universe, 60, 0.2)    
     
     # -------------- Descomente isto caso queira observar as funções de pertinência --------------
     # engolfo.view()
@@ -81,17 +81,54 @@ if __name__ == "__main__":
     regra12= ctrl.Rule(                                     posicao['Fundo']                            , previsao['compra'])
     regra13= ctrl.Rule(                                     mediamovel['Alta']                          , previsao['compra'])
     regra14= ctrl.Rule(                                     mediamovel['Baixa']                         , previsao['venda'])
-    regra15= ctrl.Rule(                                     ~posicao['Topo']        & ~posicao['Fundo'] , previsao['manter'])
-    regra15= ctrl.Rule(                                     ~mediamovel['Alta']     & ~mediamovel['Baixa']  , previsao['manter'])
-    regra16= ctrl.Rule(                                     mediamovel['Alta']      & posicao['Topo']   , previsao['manter'])
-    regra17= ctrl.Rule(                                     mediamovel['Baixa']      & posicao['Fundo'] , previsao['manter'])
+    # Regras em teste
+    regra15= ctrl.Rule(                              ~posicao['Topo']        & ~posicao['Fundo']        , previsao['manter'])
+    regra16= ctrl.Rule(                              ~mediamovel['Alta']     & ~mediamovel['Baixa']     , previsao['manter'])
+    regra17= ctrl.Rule(                              mediamovel['Alta']      & posicao['Topo']          , previsao['manter'])
+    regra18= ctrl.Rule(                              mediamovel['Baixa']     & posicao['Fundo']         , previsao['manter'])
+
+    regra19 = ctrl.Rule(engolfo['alta']                    & mediamovel['Alta']    & posicao['Fundo']   , previsao['compra'])
+    regra20 = ctrl.Rule(engolfo['baixa']                   & mediamovel['Baixa']   & posicao['Topo']    , previsao['venda'])
+    regra21 = ctrl.Rule(doji['sim']                        & posicao['Fundo']      & mediamovel['Alta'] , previsao['compra'])
+    regra22 = ctrl.Rule(doji['sim']                        & posicao['Topo']       & mediamovel['Baixa'], previsao['venda'])
+    regra23 = ctrl.Rule(dragonfly['comum']                 & posicao['Fundo']      & mediamovel['Alta'] , previsao['compra'])
+    regra24 = ctrl.Rule(dragonfly['gravestone']            & posicao['Topo']       & mediamovel['Baixa'], previsao['venda'])
+    regra25 = ctrl.Rule(pinca['sim']                       & posicao['Fundo']      & mediamovel['Alta'] , previsao['venda'])
+    regra26 = ctrl.Rule(pinca['sim']                       & posicao['Topo']       & mediamovel['Baixa'], previsao['compra'])
 
 
-    sistema_controle = ctrl.ControlSystem([regra1, regra2, regra3, regra4, regra5, regra6, regra7, regra8, regra9, regra10, regra11, regra12, regra13, regra14, regra15, regra16, regra17])
+    sistema_controle = ctrl.ControlSystem([
+                                       regra1, 
+                                       regra2, 
+                                       regra3, 
+                                       regra4, 
+                                       regra5, 
+                                       regra6, 
+                                       regra7, 
+                                       regra8, 
+                                       regra9, 
+                                       regra10, 
+                                       regra11, 
+                                       regra12, 
+                                       regra13, 
+                                       regra14, 
+                                       regra15,
+                                       regra16, 
+                                       regra17,
+                                       regra18,
+                                       regra19,
+                                       regra20,
+                                       regra21,
+                                       regra22,
+                                       regra23,
+                                       regra24,
+                                       regra25,
+                                       regra26
+                                       ])
     sistema = ctrl.ControlSystemSimulation(sistema_controle)
 
     # 0 - Não há, 1 - Engolfo de baixa, 2 - Engolfo de Alta
-    sistema.input['engolfo'] = 0
+    sistema.input['engolfo'] = 2
     # 0 - Não há, 1 - Dragonfly comum, 2 - Dragonfly Gravestone
     sistema.input['dragonfly'] = 0
     # 0 - Não há, 1 - Há
@@ -101,7 +138,7 @@ if __name__ == "__main__":
     # 0 - Não há, 1 - Martelo comum, 2 - Martelo invertido
     sistema.input['martelo'] = 0
     # Qualquer valor entre 0 a 10, sendo 0 uma média totalmente para baixo, e 10 totalmente para cima
-    sistema.input['media_movel'] = 7
+    sistema.input['media_movel'] = 6
     # Qualquer valor entre 0 e 10, sendo 0 um fundo absoluto e 10 um topo absoluto
     sistema.input['posicao'] = 2
 
