@@ -15,6 +15,7 @@ packaging==21.3
 pandas==1.4.3
 pandas-ta==0.3.14b0
 Pillow==9.2.0
+plotly==5.9.0
 pyparsing==2.4.7
 python-dateutil==2.8.1
 pytz==2022.1
@@ -23,5 +24,6 @@ scikit-fuzzy==0.4.2
 scipy==1.7.2
 six==1.16.0
 TA-Lib @ file:///C:/Users/richa/Downloads/TA_Lib-0.4.24-cp310-cp310-win_amd64.whl
+tenacity==8.0.1
 urllib3==1.26.11
 yfinance==0.1.74
