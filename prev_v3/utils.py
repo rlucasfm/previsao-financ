@@ -1,5 +1,15 @@
 import pandas as pd
 import finplot as fplt
+import random
+import time
+
+def random_date(start, end):
+    time_format = "%Y-%m-%d"
+    prop = random.random()
+    stime = time.mktime(time.strptime(start, time_format))
+    etime = time.mktime(time.strptime(end, time_format))
+    ptime = stime + prop * (etime - stime)
+    return time.strftime(time_format, time.localtime(ptime))
 
 def normalize_fuzzy_indicators(df, key):
     normalized_df=(df[key]-df[key].min())/(df[key].max()-df[key].min())*100

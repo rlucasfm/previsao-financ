@@ -27,7 +27,7 @@ class FuzzyObject:
         uni2 = np.arange(0, 1.1, 0.01)
 
         # -------------- DEFINIÇÃO DE ANTECEDENTES --------------
-        print('Definindo os antecedentes...')        
+        # print('Definindo os antecedentes...')        
         self.engulfing = ctrl.Antecedent(uni2, 'engulfing')
         self.dragonflydoji = ctrl.Antecedent(uni2, 'dragonflydoji')    
         self.doji = ctrl.Antecedent(uni2, 'doji')    
@@ -41,14 +41,14 @@ class FuzzyObject:
         self.posicao = ctrl.Antecedent(universe, 'posicao')
 
         # -------------- DEFINIÇÃO DO CONSEQUENTE --------------
-        print('Definindo o consequente...')
+        # print('Definindo o consequente...')
         self.previsao = ctrl.Consequent(np.arange(0, 101, 1), 'previsao')
         
         # ------ DEFINIÇÃO DO THRESHOLD DE AGRESSIVIDADE -------
         threshold = 4
 
         # -------------- DEFINIÇÃO DAS FUNÇÕES DE PERTINÊNCIA --------------
-        print('Definindo as funcoes de pertinencia...')
+        # print('Definindo as funcoes de pertinencia...')
         self.engulfing['baixa'] = fuzz.trimf(self.engulfing.universe, [-0.01, 0, 0.01])
         self.engulfing['nao'] = fuzz.trimf(self.engulfing.universe, [0.49, 0.5, 0.51])   
         self.engulfing['alta'] = fuzz.trimf(self.engulfing.universe, [0.99, 1, 1.01])   
@@ -103,7 +103,7 @@ class FuzzyObject:
        
     def define_rules(self):
         # -------------- DEFINIÇÃO DAS REGRAS --------------
-        print('Definindo as regras...')
+        # print('Definindo as regras...')
         regra1 = ctrl.Rule(self.engulfing['alta']           & self.sma['Alta']                                      , self.previsao['compra'])
         regra2 = ctrl.Rule(self.engulfing['baixa']          & self.sma['Baixa']                                     , self.previsao['venda'])
         regra3 = ctrl.Rule(self.doji['sim']                                             & self.posicao['Fundo']     , self.previsao['compra'])
@@ -242,11 +242,11 @@ class FuzzyObject:
             res['manter'] = fuzz.interp_membership(self.previsao.universe, self.previsao['manter'].mf, result)
             res['compra'] = fuzz.interp_membership(self.previsao.universe, self.previsao['compra'].mf, result)
 
-            print("Valor da previsão: \t" + str(result))
-            print("Pertinencia Venda: \t" + str(res['venda']))
-            print("Pertinencia Manter: \t" + str(res['manter']))
-            print("Pertinencia Compra: \t" + str(res['compra']))    
-            print("Indicação: \t\t" + max(res, key=res.get))
+            # print("Valor da previsão: \t" + str(result))
+            # print("Pertinencia Venda: \t" + str(res['venda']))
+            # print("Pertinencia Manter: \t" + str(res['manter']))
+            # print("Pertinencia Compra: \t" + str(res['compra']))    
+            # print("Indicação: \t\t" + max(res, key=res.get))
             
             return {
                 "resultado": result,

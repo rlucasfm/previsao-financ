@@ -1,6 +1,10 @@
 from signal_processing import SymbolData
 from technical_analysis import FuzzyObject
 from utils import normalize_fuzzy_indicators, normalize_crispy_indicators, plot_financial_data
+# Ignorar warnings
+import warnings
+from pandas.core.common import SettingWithCopyWarning
+warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
 
 class Consts:
     WINDOW_SIZE = 60
@@ -63,7 +67,8 @@ def main(first_date='2018-02-05', window=60, test=False):
     
     return {
         "resultados": results,
-        "dados_selecionados": symbol_data_windowed
+        "dados_selecionados": symbol_data_windowed,
+        "ponto_analise": advise_point
     }
     
 if __name__ == "__main__":
