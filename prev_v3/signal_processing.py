@@ -16,5 +16,6 @@ class SymbolData:
         self.df['rsi'] = self.df.ta.rsi(length=14)
         self.df['sma'] = self.df.ta.sma(length=21)
         self.df['ema'] = self.df.ta.ema(length=21)
+        self.df['posicao'] = self.df.ta.willr(length=21) + 100
         
         return self.df

@@ -45,7 +45,7 @@ class FuzzyObject:
         self.previsao = ctrl.Consequent(np.arange(0, 101, 1), 'previsao')
         
         # ------ DEFINIÇÃO DO THRESHOLD DE AGRESSIVIDADE -------
-        threshold = 3
+        threshold = 4
 
         # -------------- DEFINIÇÃO DAS FUNÇÕES DE PERTINÊNCIA --------------
         print('Definindo as funcoes de pertinencia...')
@@ -69,17 +69,17 @@ class FuzzyObject:
         self.invertedhammer['nao'] = fuzz.trimf(self.invertedhammer.universe, [-0.01, 0, 0.01])
         self.invertedhammer['sim'] = fuzz.trimf(self.invertedhammer.universe, [0.99, 1, 1.01]) 
         
-        self.sma['Baixa'] = fuzz.trimf(self.sma.universe, [-0.01, 0, 50])
-        self.sma['Alta'] = fuzz.trimf(self.sma.universe, [50, 100, 101])
+        self.sma['Baixa'] = fuzz.zmf(self.sma.universe, 10, 50)
+        self.sma['Alta'] = fuzz.smf(self.sma.universe, 50, 90)
         
-        self.rsi['sobrevenda'] = fuzz.trimf(self.rsi.universe, [-0.01, 0, 50])
-        self.rsi['sobrecompra'] = fuzz.trimf(self.rsi.universe, [50, 100, 101])
+        self.rsi['sobrevenda'] = fuzz.zmf(self.rsi.universe, 30, 50)
+        self.rsi['sobrecompra'] = fuzz.smf(self.rsi.universe, 50, 70) 
 
-        self.ema['Baixa'] = fuzz.trimf(self.ema.universe, [-0.01, 0, 50])
-        self.ema['Alta'] = fuzz.trimf(self.ema.universe, [50, 100, 101])
+        self.ema['Baixa'] = fuzz.zmf(self.ema.universe, 10, 50)
+        self.ema['Alta'] = fuzz.smf(self.ema.universe, 50, 90) 
 
-        self.posicao['Fundo'] = fuzz.trimf(self.posicao.universe, [-0.01, 0, 50])
-        self.posicao['Topo'] = fuzz.trimf(self.posicao.universe, [50, 100, 101])    
+        self.posicao['Fundo'] = fuzz.zmf(self.posicao.universe, 1, 70)
+        self.posicao['Topo'] = fuzz.smf(self.posicao.universe, 30, 99)    
 
         self.previsao['venda'] = fuzz.sigmf(self.previsao.universe, (35 + threshold), -0.2)
         self.previsao['manter'] = fuzz.gaussmf(self.previsao.universe, 50, (15 - threshold))
@@ -111,15 +111,15 @@ class FuzzyObject:
         regra5 = ctrl.Rule(self.dragonflydoji['sim']                                    & self.posicao['Fundo']     , self.previsao['compra'])    
         regra6 = ctrl.Rule(self.invertedhammer['sim']       & self.sma['Alta']          & self.posicao['Fundo']     , self.previsao['compra'])
         regra7 = ctrl.Rule(self.hammer['sim']               & self.sma['Baixa']         & self.posicao['Topo']      , self.previsao['venda'])
-        regra8 = ctrl.Rule(self.harami['alta']                                           & self.posicao['Fundo']     , self.previsao['compra'])
-        regra9 = ctrl.Rule(self.harami['baixa']                                           & self.posicao['Topo']      , self.previsao['venda'])
+        regra8 = ctrl.Rule(self.harami['alta']                                          & self.posicao['Fundo']     , self.previsao['compra'])
+        regra9 = ctrl.Rule(self.harami['baixa']                                         & self.posicao['Topo']      , self.previsao['venda'])
         regra10= ctrl.Rule(                                                             self.posicao['Topo']        , self.previsao['venda'])
         regra11= ctrl.Rule(                                                             self.posicao['Fundo']       , self.previsao['compra'])
         regra12= ctrl.Rule(                                 self.sma['Alta']                                        , self.previsao['compra'])
         regra13= ctrl.Rule(                                 self.sma['Baixa']                                       , self.previsao['venda'])
         # Regras com SMA        
-        regra14= ctrl.Rule(                                 ~self.posicao['Topo']       & ~self.posicao['Fundo']    , self.previsao['manter'])
-        regra15= ctrl.Rule(                                 ~self.sma['Alta']           & ~self.sma['Baixa']        , self.previsao['manter'])
+        # regra14= ctrl.Rule(                                 ~self.posicao['Topo']       & ~self.posicao['Fundo']    , self.previsao['manter'])
+        # regra15= ctrl.Rule(                                 ~self.sma['Alta']           & ~self.sma['Baixa']        , self.previsao['manter'])
         regra16= ctrl.Rule(                                 self.sma['Alta']            & self.posicao['Topo']      , self.previsao['manter'])
         regra17= ctrl.Rule(                                 self.sma['Baixa']           & self.posicao['Fundo']     , self.previsao['manter'])
         regra18 = ctrl.Rule(self.engulfing['alta']          & self.sma['Alta']          & self.posicao['Fundo']     , self.previsao['compra'])
@@ -130,7 +130,7 @@ class FuzzyObject:
         regra23 = ctrl.Rule(self.harami['alta']             & self.posicao['Fundo']     & self.sma['Alta']          , self.previsao['compra'])
         regra24 = ctrl.Rule(self.harami['baixa']            & self.posicao['Topo']      & self.sma['Baixa']         , self.previsao['venda'])
         # Regras com EMA
-        regra25= ctrl.Rule(                                 ~self.ema['Alta']           & ~self.ema['Baixa']        , self.previsao['manter'])
+        # regra25= ctrl.Rule(                                 ~self.ema['Alta']           & ~self.ema['Baixa']        , self.previsao['manter'])
         regra26= ctrl.Rule(                                 self.ema['Alta']            & self.posicao['Topo']      , self.previsao['manter'])
         regra27= ctrl.Rule(                                 self.ema['Baixa']           & self.posicao['Fundo']     , self.previsao['manter'])
         regra28 = ctrl.Rule(self.engulfing['alta']          & self.ema['Alta']          & self.posicao['Fundo']     , self.previsao['compra'])
@@ -141,7 +141,7 @@ class FuzzyObject:
         regra33 = ctrl.Rule(self.harami['alta']             & self.posicao['Fundo']     & self.ema['Alta']          , self.previsao['compra'])
         regra34 = ctrl.Rule(self.harami['baixa']            & self.posicao['Topo']      & self.ema['Baixa']         , self.previsao['venda'])
         # Regras com RSI
-        regra35= ctrl.Rule(                                 ~self.rsi['sobrevenda']     & ~self.rsi['sobrecompra']  , self.previsao['manter'])
+        # regra35= ctrl.Rule(                                 ~self.rsi['sobrevenda']     & ~self.rsi['sobrecompra']  , self.previsao['manter'])
         regra36= ctrl.Rule(                                 self.rsi['sobrecompra']     & self.posicao['Topo']      , self.previsao['venda'])
         regra37= ctrl.Rule(                                 self.rsi['sobrevenda']      & self.posicao['Fundo']     , self.previsao['compra'])
         regra38 = ctrl.Rule(self.engulfing['alta']          & self.rsi['sobrevenda']    & self.posicao['Fundo']     , self.previsao['compra'])
@@ -151,6 +151,13 @@ class FuzzyObject:
         regra42 = ctrl.Rule(self.dragonflydoji['sim']       & self.posicao['Fundo']     & self.rsi['sobrevenda']    , self.previsao['compra'])
         regra43 = ctrl.Rule(self.harami['alta']             & self.posicao['Fundo']     & self.rsi['sobrevenda']    , self.previsao['compra'])
         regra44 = ctrl.Rule(self.harami['baixa']            & self.posicao['Topo']      & self.rsi['sobrecompra']   , self.previsao['venda'])
+        # Regras básicas de médias, rsi e posição
+        regra45 = ctrl.Rule(                                self.posicao['Topo']        & self.rsi['sobrecompra']   , self.previsao['venda'])
+        regra46 = ctrl.Rule(                                self.posicao['Fundo']       & self.rsi['sobrevenda']    , self.previsao['compra'])
+        regra45 = ctrl.Rule(                                self.posicao['Topo']        & self.ema['Baixa']         , self.previsao['venda'])
+        regra46 = ctrl.Rule(                                self.posicao['Fundo']       & self.ema['Alta']          , self.previsao['compra'])
+        regra47 = ctrl.Rule(                                self.posicao['Topo']        & self.sma['Baixa']         , self.previsao['venda'])
+        regra48 = ctrl.Rule(                                self.posicao['Fundo']       & self.sma['Alta']          , self.previsao['compra'])
 
 
         sistema_controle = ctrl.ControlSystem([
@@ -167,8 +174,8 @@ class FuzzyObject:
                                         regra11, 
                                         regra12, 
                                         regra13, 
-                                        regra14, 
-                                        regra15,
+                                        # regra14, 
+                                        # regra15,
                                         regra16, 
                                         regra17,
                                         regra18,
@@ -178,7 +185,7 @@ class FuzzyObject:
                                         regra22,
                                         regra23,
                                         regra24,
-                                        regra25,
+                                        # regra25,
                                         regra26,
                                         regra27,
                                         regra28,
@@ -188,7 +195,7 @@ class FuzzyObject:
                                         regra32,
                                         regra33,
                                         regra34,
-                                        regra35,
+                                        # regra35,
                                         regra36,
                                         regra37,
                                         regra38,
@@ -197,7 +204,11 @@ class FuzzyObject:
                                         regra41,
                                         regra42,
                                         regra43,
-                                        regra44
+                                        regra44,
+                                        regra45,
+                                        regra46,
+                                        regra47,
+                                        regra48
                                         ])
         self.sistema = ctrl.ControlSystemSimulation(sistema_controle)
         
@@ -214,13 +225,13 @@ class FuzzyObject:
         self.sistema.input['hammer'] = self.input['hammer']
         # 0 - Não há, 1 - Há
         self.sistema.input['invertedhammer'] = self.input['invertedhammer']
-        # Qualquer valor entre 0 a 10, sendo 0 uma média totalmente para baixo, e 10 totalmente para cima
+        # Qualquer valor entre 0 a 100, sendo 0 uma média totalmente para baixo, e 100 totalmente para cima
         self.sistema.input['sma'] = self.input['sma']
-        # Qualquer valor entre 0 a 10, sendo 0 uma média totalmente para baixo, e 10 totalmente para cima
+        # Qualquer valor entre 0 a 100, sendo 0 uma média totalmente para baixo, e 100 totalmente para cima
         self.sistema.input['ema'] = self.input['ema']
-        # Qualquer valor entre 0 a 10, sendo 0 totalmente em sobrevenda, e 10 totalmente em sobrecompra
+        # Qualquer valor entre 0 a 100, sendo 0 totalmente em sobrevenda, e 100 totalmente em sobrecompra
         self.sistema.input['rsi'] = self.input['rsi']
-        # Qualquer valor entre 0 e 10, sendo 0 um fundo absoluto e 10 um topo absoluto
+        # Qualquer valor entre 0 e 100, sendo 0 um fundo absoluto e 100 um topo absoluto
         self.sistema.input['posicao'] = self.input['posicao']
 
         try:
