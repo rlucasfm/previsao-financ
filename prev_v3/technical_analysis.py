@@ -42,6 +42,7 @@ class FuzzyObject:
 
         # -------------- DEFINIÇÃO DO CONSEQUENTE --------------
         # print('Definindo o consequente...')
+        # Metodos de defuzzificação: centroid, bisector, 'mom' (media dos máximos), 'som' (maxima dos maximos), 'lom' (minimo dos máximos)
         self.previsao = ctrl.Consequent(np.arange(0, 101, 1), 'previsao')
         
         # ------ DEFINIÇÃO DO THRESHOLD DE AGRESSIVIDADE -------
@@ -87,17 +88,17 @@ class FuzzyObject:
     
     
     def print_dataset(self):
-    #    self.engulfing.view()
-    #    self.dragonflydoji.view()
-    #    self.doji.view()
-    #    self.harami.view()
-    #    self.hammer.view()
-    #    self.invertedhammer.view()
+       self.engulfing.view()
+       self.dragonflydoji.view()
+       self.doji.view()
+       self.harami.view()
+       self.hammer.view()
+       self.invertedhammer.view()
        self.sma.view()
        self.rsi.view()
        self.ema.view()
        self.posicao.view()   
-    #    self.previsao.view()
+       self.previsao.view()
     
        plt.show()
        

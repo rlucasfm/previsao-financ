@@ -29,7 +29,7 @@ def main(first_date='2018-02-05', window=60, test=False):
     symbol_data_windowed = symbol_data.df.iloc[index_first_date:index_last_date, :].copy()
     
     # ---- Window data for plot
-    sb_copy_data_windowed = sd_copy.iloc[index_first_date:index_last_date, :]    
+    sb_copy_data_windowed = sd_copy.iloc[index_first_date:index_last_date, :]
     
     # ---- Select analysis point
     indicators = sb_copy_data_windowed[['doji', 'dragonflydoji', 'hammer', 'invertedhammer', 'engulfing', 'harami']]
@@ -59,7 +59,7 @@ def main(first_date='2018-02-05', window=60, test=False):
         # Exibição dos resultados no gráfico com pertinencias
         fuzzy_forecast.print_results()    
         # ---- Exibir as funções de pertinencia
-        fuzzy_forecast.print_dataset()    
+        # fuzzy_forecast.print_dataset()
         # ---- Printar dados de indicadores no ponto de análise
         print(symbol_data_windowed.loc[advise_point, :])
         # Exibe os candles na janela escolhida, assim como o ponto de interesse escolhido

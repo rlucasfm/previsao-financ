@@ -29,7 +29,7 @@ class Backtester:
 
 if __name__ == "__main__":
     backtester = Backtester()
-    attempts = 50
+    attempts = 500
     for i in range(attempts):
         while True:
             try:

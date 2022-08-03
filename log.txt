@@ -1,0 +1,31 @@
+ 
+--------- TESTE 2022-08-03 15:58:42 ---------
+                 Tentativas: 50
+                 Sucessos: 20
+                 Fracassos: 20
+                 Indiferente: 10
+                 Sucesso %: 40.0
+                 Fracassos %: 40.0
+                 Indiferente %: 20.0
+                 Positivos %: 60.0
+              
+--------- TESTE 2022-08-03 16:01:12 ---------
+                 Tentativas: 200
+                 Sucessos: 118
+                 Fracassos: 64
+                 Indiferente: 18
+                 Sucesso %: 59.0
+                 Fracassos %: 32.0
+                 Indiferente %: 9.0
+                 Positivos %: 68.0
+              
+--------- TESTE 2022-08-03 16:06:08 ---------
+                 Tentativas: 500
+                 Sucessos: 243
+                 Fracassos: 174
+                 Indiferente: 83
+                 Sucesso %: 48.6
+                 Fracassos %: 34.8
+                 Indiferente %: 16.6
+                 Positivos %: 65.2
+             
