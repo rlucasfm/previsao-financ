@@ -248,6 +248,14 @@ class FuzzyObject:
             print("Pertinencia Compra: \t" + str(res['compra']))    
             print("Indicação: \t\t" + max(res, key=res.get))
             
+            return {
+                "resultado": result,
+                "venda": res['venda'],
+                "manter": res['manter'],
+                "compra": res['compra'],
+                "indicacao": max(res, key=res.get)
+            }
+            
         except ValueError:
             print('O sistema é esparso demais. Não nenhuma regra que possa relacionar os inputs dados')
             print('Indicação: \t\t manter')
